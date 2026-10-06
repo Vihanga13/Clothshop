@@ -1,5 +1,5 @@
 # Dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 .yarn/*
@@ -10,10 +10,10 @@
 !.yarn/versions
 
 # Next.js build output
-/.next/
-/out/
-/build
-/dist
+.next/
+out/
+build/
+dist/
 
 # SQLite database
 *.db

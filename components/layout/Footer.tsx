@@ -169,8 +169,8 @@ export const Footer: React.FC = () => {
               </h5>
               <ul className="space-y-2.5 text-xs font-bold uppercase">
                 <li>
-                  <Link href="/cart" className="text-gray-300 hover:text-neo-green transition-colors">
-                    Order Status
+                  <Link href="/track-order" className="text-gray-300 hover:text-neo-green transition-colors">
+                    Track Order Live
                   </Link>
                 </li>
                 <li>

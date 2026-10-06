@@ -161,6 +161,14 @@ function OrderSuccessContent() {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Button
+          href={`/track-order?orderId=${orderId}`}
+          variant="black"
+          size="lg"
+          leftIcon={<Truck className="w-5 h-5 text-neo-yellow" />}
+        >
+          TRACK SHIPMENT LIVE
+        </Button>
         <Button href="/shop" variant="yellow" size="lg" rightIcon={<ArrowRight className="w-5 h-5" strokeWidth={3} />}>
           EXPLORE MORE VAULT DROPS
         </Button>

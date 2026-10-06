@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
 import { useWishlistStore } from '@/store/useWishlistStore';
-import { ShoppingBag, Heart, Search, Menu, X, Zap, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Heart, Search, Menu, X, Zap, ShieldCheck, Truck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
@@ -139,16 +139,6 @@ export const Navbar: React.FC = () => {
                 )}
               </Link>
 
-              {/* Admin Portal Button */}
-              <Link
-                href="/admin"
-                className="hidden md:flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 bg-black text-white border-2 border-black rounded-lg shadow-neo-sm hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-neo active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs font-black uppercase tracking-wider"
-                title="Admin Control Center"
-              >
-                <ShieldCheck className="w-4 h-4 text-neo-yellow" />
-                <span>ADMIN</span>
-              </Link>
-
               {/* Cart Drawer Trigger Button */}
               <button
                 onClick={openCart}
@@ -277,12 +267,12 @@ export const Navbar: React.FC = () => {
                 </Link>
 
                 <Link
-                  href="/admin"
+                  href="/track-order"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 bg-black text-white border-2 border-black rounded-lg font-black text-sm uppercase shadow-neo flex items-center justify-between"
+                  className="p-3 bg-white border-2 border-black rounded-lg font-black text-sm uppercase shadow-neo flex items-center justify-between"
                 >
-                  <span>ADMIN CONTROL CENTER</span>
-                  <ShieldCheck className="w-4 h-4 text-neo-yellow" />
+                  <span>TRACK ORDER LIVE</span>
+                  <Truck className="w-4 h-4 text-neo-blue" />
                 </Link>
               </div>
 

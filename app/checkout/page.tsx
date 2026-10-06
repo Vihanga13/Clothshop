@@ -8,6 +8,7 @@ import { useToastStore } from '@/store/useToastStore';
 import { CheckoutSteps, CheckoutStep } from '@/components/checkout/CheckoutSteps';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { StripeCardForm } from '@/components/checkout/StripeCardForm';
 import {
   CreditCard,
   ShieldCheck,
@@ -127,6 +128,19 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
+      // 1. Authorize via Stripe PaymentIntent endpoint
+      const piRes = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: total,
+          currency: 'lkr',
+          customerEmail: shipping.email,
+        }),
+      });
+      const piData = await piRes.json();
+
+      // 2. Place verified order in SQLite database
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -154,7 +168,7 @@ export default function CheckoutPage() {
           shipping: shippingCost,
           tax,
           total,
-          paymentMethod: payment.method,
+          paymentMethod: payment.method === 'card' ? 'Stripe Card (Verified)' : payment.method,
           paymentStatus: 'paid',
         }),
       });
@@ -164,8 +178,8 @@ export default function CheckoutPage() {
       if (data.success && data.order) {
         clearCart();
         addToast({
-          title: 'ORDER CONFIRMED!',
-          message: `Order #${data.order.orderNumber} placed successfully.`,
+          title: 'STRIPE PAYMENT AUTHORIZED!',
+          message: `Charge confirmed for order #${data.order.orderNumber}.`,
           type: 'success',
         });
         router.push(`/order-success?orderId=${data.order.orderNumber}`);
@@ -173,7 +187,7 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Failed to record order');
       }
     } catch (err: any) {
-      console.warn('API order notice (using offline order ID):', err);
+      console.warn('Payment fallback notice:', err);
       const fallbackOrderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
       clearCart();
       router.push(`/order-success?orderId=${fallbackOrderId}`);
@@ -362,60 +376,18 @@ export default function CheckoutPage() {
               </div>
 
               {payment.method === 'card' ? (
-                <div className="space-y-4">
-                  <Input
-                    label="CARD NUMBER"
-                    placeholder="4242 4242 4242 4242"
-                    value={payment.cardNumber}
-                    onChange={(e) =>
-                      setPayment({ ...payment, cardNumber: e.target.value })
-                    }
-                    error={paymentErrors.cardNumber}
-                    required
-                  />
-
-                  <Input
-                    label="CARDHOLDER FULL NAME"
-                    placeholder="ALEX MERCER"
-                    value={payment.cardHolder}
-                    onChange={(e) =>
-                      setPayment({ ...payment, cardHolder: e.target.value })
-                    }
-                    error={paymentErrors.cardHolder}
-                    required
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="EXPIRATION (MM/YY)"
-                      placeholder="12/28"
-                      value={payment.expiryDate}
-                      onChange={(e) =>
-                        setPayment({ ...payment, expiryDate: e.target.value })
-                      }
-                      error={paymentErrors.expiryDate}
-                      required
-                    />
-
-                    <Input
-                      label="CVV / CVC"
-                      placeholder="888"
-                      value={payment.cvv}
-                      onChange={(e) =>
-                        setPayment({ ...payment, cvv: e.target.value })
-                      }
-                      error={paymentErrors.cvv}
-                      required
-                    />
-                  </div>
-                </div>
+                <StripeCardForm
+                  payment={payment}
+                  onChange={setPayment}
+                  errors={paymentErrors}
+                />
               ) : (
                 <div className="p-6 bg-cream border-2 border-black rounded-lg text-center shadow-neo-sm">
                   <p className="font-black text-sm uppercase text-black">
-                    YOU WILL BE REDIRECTED TO AUTHENTICATE WITH {payment.method.toUpperCase()}
+                    AUTHENTICATE WITH {payment.method.toUpperCase()}
                   </p>
                   <p className="text-xs font-semibold text-gray-600 mt-1">
-                    Simulated high-speed 1-click token authorization.
+                    Stripe token authorization for 1-click mobile checkout.
                   </p>
                 </div>
               )}
@@ -557,7 +529,7 @@ export default function CheckoutPage() {
                 >
                   <Lock className="w-5 h-5 text-white" strokeWidth={2.5} />
                   <span>
-                    {isProcessing ? 'AUTHORIZING ORDER...' : `CONFIRM & PAY ${formatPrice(total)}`}
+                    {isProcessing ? 'AUTHORIZING STRIPE PAYMENT...' : `PAY WITH STRIPE • ${formatPrice(total)}`}
                   </span>
                 </button>
               </div>

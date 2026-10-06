@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: #FFF8E7;
+    --black: #000000;
+  }
+
+  body {
+    background-color: #FFF8E7;
+    color: #000000;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Accessible focus states: thick outline */
+  *:focus-visible {
+    outline: 3px solid #000000;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: #FFD60A;
+    color: #000000;
+  }
+}
+
+/* Custom Neo-Brutalist utility classes */
+@layer components {
+  /* Tactile button press effect */
+  .neo-btn {
+    position: relative;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    transition: transform 0.12s ease-in-out, box-shadow 0.12s ease-in-out;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+
+  .neo-btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000000;
+  }
+
+  .neo-btn:active:not(:disabled) {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px #000000;
+  }
+
+  .neo-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: 2px 2px 0px #000000;
+  }
+
+  /* Tactile card */
+  .neo-card {
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  }
+
+  .neo-card-hover:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #000000;
+  }
+
+  /* Neo brutalist input */
+  .neo-input {
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    outline: none;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .neo-input:focus {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000000;
+  }
+
+  /* Neo brutalist badge */
+  .neo-badge {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* Thick brutalist divider */
+  .neo-divider {
+    border: 0;
+    border-top: 3px solid #000000;
+    margin: 2rem 0;
+  }
+}
+
+/* Custom scrollbar in neo-brutalist style */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF8E7;
+  border-left: 3px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFD60A;
+  border: 3px solid #000000;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF3B30;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

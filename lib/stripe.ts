@@ -1,11 +1,11 @@
-import Stripe from 'stripe';
+// Lightweight Stripe configuration helper (no external npm dependencies required)
+export const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+export const isStripeConfigured = () => {
+  return Boolean(stripeSecretKey && !stripeSecretKey.includes('placeholder'));
+};
 
-export const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey, {
-      apiVersion: '2024-09-30.acacia' as any,
-    })
-  : null;
-
-export default stripe;
+export default {
+  stripeSecretKey,
+  isStripeConfigured,
+};

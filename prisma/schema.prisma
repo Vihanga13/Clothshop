@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id            String      @id
+  name          String
+  slug          String      @unique
+  tagline       String
+  price         Float
+  originalPrice Float?
+  category      String
+  tags          String      // Stored as JSON array string e.g. '["hoodie", "heavyweight"]'
+  badge         String?
+  badgeColor    String?
+  rating        Float       @default(5.0)
+  reviewCount   Int         @default(0)
+  images        String      // Stored as JSON array string
+  colors        String      // Stored as JSON array string e.g. '[{"name":"Black","hex":"#000"}]'
+  sizes         String      // Stored as JSON array string e.g. '["S","M","L","XL"]'
+  description   String
+  features      String      // Stored as JSON array string
+  fabric        String?
+  fit           String?
+  care          String?     // Stored as JSON array string
+  stock         Int         @default(50)
+  isBestSeller  Boolean     @default(false)
+  isFeatured    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  reviews       Review[]
+  orderItems    OrderItem[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author    String
+  rating    Int
+  date      String
+  title     String
+  comment   String
+  verified  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  createdAt       DateTime    @default(now())
+  status          String      @default("confirmed") // confirmed, processing, shipped, delivered, cancelled
+  
+  // Customer & Shipping Info
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  addressLine1    String
+  addressLine2    String?
+  city            String
+  state           String
+  postalCode      String
+  country         String
+  
+  // Financial Summary
+  subtotal        Float
+  discount        Float       @default(0)
+  shipping        Float       @default(0)
+  tax             Float       @default(0)
+  total           Float
+  promoCode       String?
+  
+  // Payment Info
+  paymentMethod   String      @default("card") // card, apple-pay, paypal, cod
+  paymentStatus   String      @default("paid") // paid, pending, failed
+  
+  // Relation to ordered items
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name      String
+  price     Float
+  image     String
+  color     String
+  size      String
+  quantity  Int
+}

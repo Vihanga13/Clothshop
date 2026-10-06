@@ -123,15 +123,63 @@ export default function CheckoutPage() {
     }
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setIsProcessing(true);
 
-    setTimeout(() => {
-      const orderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: shipping.fullName,
+          customerEmail: shipping.email,
+          customerPhone: shipping.phone,
+          addressLine1: shipping.addressLine1,
+          addressLine2: shipping.addressLine2,
+          city: shipping.city,
+          state: shipping.state,
+          postalCode: shipping.postalCode,
+          country: shipping.country,
+          items: items.map((item) => ({
+            productId: item.productId,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            color: item.color,
+            size: item.size,
+            quantity: item.quantity,
+          })),
+          subtotal,
+          discount,
+          shipping: shippingCost,
+          tax,
+          total,
+          paymentMethod: payment.method,
+          paymentStatus: 'paid',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.order) {
+        clearCart();
+        addToast({
+          title: 'ORDER CONFIRMED!',
+          message: `Order #${data.order.orderNumber} placed successfully.`,
+          type: 'success',
+        });
+        router.push(`/order-success?orderId=${data.order.orderNumber}`);
+      } else {
+        throw new Error(data.error || 'Failed to record order');
+      }
+    } catch (err: any) {
+      console.warn('API order notice (using offline order ID):', err);
+      const fallbackOrderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
       clearCart();
+      router.push(`/order-success?orderId=${fallbackOrderId}`);
+    } finally {
       setIsProcessing(false);
-      router.push(`/order-success?orderId=${orderId}`);
-    }, 1800);
+    }
   };
 
   if (items.length === 0 && step === 1) {

@@ -10,7 +10,8 @@ interface Params {
 // GET /api/orders/[id] - Get order details by ID or orderNumber
 export async function GET(_request: NextRequest, { params }: Params) {
   try {
-    const cleanId = id.trim();
+    const { id } = params;
+    const cleanId = (id || '').trim();
 
     const order = await prisma.order.findFirst({
       where: {

@@ -36,7 +36,13 @@ function startInternalServer(outDir, port) {
 
       fs.readFile(filePath, (err, content) => {
         if (err) {
-          // Fallback to index.html for client-side routing
+          // Fallback to index.html only for SPA client-side page navigation, not static assets
+          const isAsset = cleanUrl.startsWith('/_next/') || Boolean(path.extname(cleanUrl));
+          if (isAsset) {
+            res.writeHead(404);
+            res.end('Asset Not Found');
+            return;
+          }
           fs.readFile(path.join(outDir, 'index.html'), (err2, indexHtml) => {
             if (err2) {
               res.writeHead(404);

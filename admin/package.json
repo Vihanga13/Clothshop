@@ -2,11 +2,32 @@
   "name": "cmz-admin",
   "version": "1.0.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "dev": "next dev -p 3002",
+    "desktop": "electron .",
+    "electron": "electron .",
     "build": "next build",
+    "dist": "next build && electron-builder --win portable",
+    "dist:installer": "next build && electron-builder --win nsis",
     "start": "next start -p 3002",
     "lint": "next lint"
+  },
+  "build": {
+    "appId": "com.clothshop.admin",
+    "productName": "Clothshop Admin",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "files": [
+      "main.js",
+      "out/**/*"
+    ]
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -21,6 +42,9 @@
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"

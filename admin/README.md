@@ -15,12 +15,28 @@ A standalone Next.js operations portal for managing the Clothshop e-commerce sto
    npm install
    ```
 
-2. Start the admin development server:
+### Web Mode
+1. Start the admin web development server:
    ```bash
    npm run dev
    ```
+2. Open [http://localhost:3002](http://localhost:3002) in your browser.
 
-3. Open [http://localhost:3002](http://localhost:3002) in your browser.
+### Native Desktop App Mode (Electron Dev)
+Launch as a native Windows desktop application window:
+```bash
+npm run desktop
+```
+*(Or from root: `npm run admin:desktop`)*
+
+### Standalone Portable Windows .exe (No Terminals Required!)
+Build into a real standalone `.exe` that opens with a double click:
+```bash
+npm run dist
+```
+*(Or from root: `npm run admin:build-exe`)*
+
+The portable `.exe` will be generated in `admin/dist/Clothshop Admin 1.0.0.exe`. You can place it on your Desktop and run it like any native software!
 
 ## Features
 

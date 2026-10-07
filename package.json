@@ -11,7 +11,10 @@
     "db:studio": "prisma studio",
     "db:seed": "npx tsx prisma/seed.ts",
     "admin:install": "npm --prefix admin install",
-    "admin:dev": "npm --prefix admin run dev"
+    "admin:dev": "npm --prefix admin run dev",
+    "admin:desktop": "npm --prefix admin run desktop",
+    "admin:electron": "npm --prefix admin run electron",
+    "admin:build-exe": "npm --prefix admin run dist"
   },
   "dependencies": {
     "@prisma/client": "^6.4.0",
